@@ -1,4 +1,5 @@
 import Header from "@/components/Header";
+import { Toaster } from "sonner";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -7,6 +8,7 @@ interface LayoutProps {
 const Layout = ({ children }: LayoutProps) => {
   return (
     <>
+      <Toaster richColors />
       <Header />
       {children}
     </>

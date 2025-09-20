@@ -39,7 +39,7 @@ const WelcomeForm = () => {
       >
         <Input
           placeholder="Digite seu nome:"
-          className="border-input-color placeholder:text-input-color outline-0 focus:border-orange-color w-92 lg:w-lg rounded-xs border"
+          className="border-input-color placeholder:text-input-text outline-0 focus:border-orange-color w-92 lg:w-lg rounded-xs border"
           {...register("name")}
         />
         {errors.name?.message && (

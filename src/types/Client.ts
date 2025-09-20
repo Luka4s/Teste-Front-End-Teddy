@@ -6,3 +6,9 @@ export type ClientType = {
   createdAt: string;
   updatedAt: string;
 };
+
+export type ClientDataForm = {
+  name: string;
+  salary: number;
+  companyValuation: number;
+};

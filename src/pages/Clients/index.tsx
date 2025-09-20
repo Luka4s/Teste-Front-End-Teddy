@@ -1,17 +1,30 @@
 import { useEffect, useState } from "react";
 import { apiURL } from "@/utils/apiConfig";
 import CardClient from "@/components/CardClient";
-import type { ClientType } from "@/schemas/Client";
+import type { ClientType, ClientDataForm } from "@/types/Client";
 import { Pencil, Plus, Trash2 } from "lucide-react";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import ClientForm from "@/components/ClientForm";
+import PaginationComponent from "@/components/Pagination";
 
 const ClientsPage = () => {
   const [clients, setClients] = useState<ClientType[]>([]);
+  const [dialogId, setDialogId] = useState<number>();
 
   const fetchClients = async () => {
     const response = await fetch(`${apiURL}/users`);
 
     const data = await response.json();
-
+    console.log(data);
     const responseClients = data.clients;
 
     setClients(responseClients);
@@ -21,13 +34,69 @@ const ClientsPage = () => {
     fetchClients();
   }, []);
 
+  const handleCreateNewClient = async (data: ClientDataForm) => {
+    try {
+      await fetch(`${apiURL}/users`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      toast.success("Cliente cadastrado com sucesso !");
+    } catch (error: unknown) {
+      console.error(
+        `Ocorreu um erro ao tentar criar um novo cliente, ERROR ${error}`
+      );
+    }
+  };
+
+  const handleEditClient = async (data: ClientDataForm) => {
+    try {
+      await fetch(`${apiURL}/users/${dialogId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      toast.success("Cliente atualizado com sucesso !");
+    } catch (error: unknown) {
+      console.error(
+        `Ocorreu um erro ao tentar ediar um cliente, ERROR ${error}`
+      );
+    } finally {
+      await fetchClients();
+      setDialogId(undefined);
+    }
+  };
+
+  const handleDeleteClient = async () => {
+    try {
+      await fetch(`${apiURL}/users/${dialogId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      toast.success("Cliente atualizado com sucesso !");
+    } catch (error: unknown) {
+      console.error(
+        `Ocorreu um erro ao tentar ediar um cliente, ERROR ${error}`
+      );
+    } finally {
+      await fetchClients();
+      setDialogId(undefined);
+    }
+  };
+
   return (
     <div className="flex flex-col w-screen h-auto justify-center items-center p-2 space-y-1.5 lg:px-20">
       <div className="flex  w-full gap-1">
         <strong>{clients.length}</strong>
         <p>Clientes encontrados: </p>
       </div>
-      <div className="flex flex-col items-center  md:grid  md:grid-cols-2  lg:grid-cols-3 xl:grid-cols-4 w-full gap-y-5 bg-background">
+      <main className="flex flex-col items-center  md:grid  md:grid-cols-2  lg:grid-cols-3 xl:grid-cols-4 w-full gap-y-5 bg-background">
         {clients.map((c) => (
           <CardClient key={c.id}>
             <CardClient.Header>{c.name}</CardClient.Header>
@@ -53,12 +122,73 @@ const ClientsPage = () => {
             </CardClient.Content>
             <CardClient.Footer>
               <CardClient.Icon icon={<Plus size={20} />} />
-              <CardClient.Icon icon={<Pencil size={17} />} />
-              <CardClient.Icon icon={<Trash2 size={17} color="red" />} />
+
+              <Dialog
+                open={dialogId === c.id}
+                onOpenChange={(open) => setDialogId(open ? c.id : undefined)}
+              >
+                <DialogTrigger onClick={() => setDialogId(c.id)}>
+                  <CardClient.Icon icon={<Pencil size={17} />} />
+                </DialogTrigger>
+                <DialogContent aria-describedby={undefined}>
+                  <DialogHeader>
+                    <DialogTitle>Editar cliente:</DialogTitle>
+                    <DialogClose onClick={() => setDialogId(undefined)} />
+                  </DialogHeader>
+                  <ClientForm
+                    label="Editar cliente"
+                    client={c}
+                    onHandleSubmitForm={handleEditClient}
+                    isDeleteForm
+                  />
+                </DialogContent>
+              </Dialog>
+              <Dialog
+                open={dialogId === c.id}
+                onOpenChange={(open) => setDialogId(open ? c.id : undefined)}
+              >
+                <DialogTrigger onClick={() => setDialogId(c.id)}>
+                  <CardClient.Icon icon={<Trash2 size={17} color="red" />} />
+                </DialogTrigger>
+                <DialogContent aria-describedby={undefined}>
+                  <DialogHeader>
+                    <DialogTitle>Excluir cliente:</DialogTitle>
+                    <DialogClose onClick={() => setDialogId(undefined)} />
+                  </DialogHeader>
+                  <ClientForm
+                    label="Excluir cliente"
+                    client={c}
+                    isDeleteForm
+                    onHandleDeleteClient={handleDeleteClient}
+                  />
+                </DialogContent>
+              </Dialog>
             </CardClient.Footer>
           </CardClient>
         ))}
-      </div>
+      </main>
+      <footer className="flex flex-col w-full">
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button className="border-orange-color hover:text-white border-2 bg-transparent text-orange-color">
+              Criar Cliente
+            </Button>
+          </DialogTrigger>
+          <DialogContent haria-describedby={undefined}>
+            <DialogHeader>
+              <DialogTitle>Criar cliente:</DialogTitle>
+              <DialogClose />
+            </DialogHeader>
+            <ClientForm
+              label="Criar cliente"
+              client={undefined}
+              onHandleSubmitForm={handleCreateNewClient}
+            />
+          </DialogContent>
+        </Dialog>
+
+        <PaginationComponent />
+      </footer>
     </div>
   );
 };
