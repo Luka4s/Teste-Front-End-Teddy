@@ -1,21 +1,65 @@
 import logo from "@/assets/Logo - Teddy.svg";
 import { Menu } from "lucide-react";
+import { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import Sidebar from "../Sidebar";
 
 const Header = () => {
+  const [open, setOpen] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const userName = location.state;
+  const currentPath = location.pathname;
+
   return (
-    <div className="flex w-full max-h-24 p-4 px-5 items-center justify-between bg-white shadow">
+    <div className="flex w-full h-24 max-h-24 p-4 px-5 gap-2 items-center justify-around bg-white shadow">
       <div className="flex gap-10 items-center">
-        <Menu />
-        <img src={logo} alt="Logo Teddy - Open finance" />
+        <div className="min-w-14 flex justify-center">
+          {!open && (
+            <Menu
+              onClick={() => setOpen(true)}
+              className="hover:cursor-pointer"
+            />
+          )}
+          <Sidebar
+            isOpen={open}
+            onSetIsOpen={setOpen}
+            currentPath={currentPath}
+          />
+        </div>
+        <img
+          src={logo}
+          alt="Logo Teddy - Open finance"
+          className="hidden md:flex"
+        />
       </div>
-      <div className="flex flex-1 items-center justify-center gap-10">
-        <span>Cliente</span>
-        <span>Clientes selecionados</span>
-        <span>Sair</span>
+      <div className="flex flex-1 items-center justify-center gap-2 md:gap-10">
+        <button
+          className={`hover:underline hover:cursor-pointer  ${
+            currentPath === "/clientes" && "text-orange-color underline"
+          }`}
+        >
+          Cliente
+        </button>
+        <button
+          className={`hover:underline hover:cursor-pointer ${
+            currentPath === "/clientes-selecionados" &&
+            "text-orange-color underline"
+          }`}
+        >
+          Clientes selecionados
+        </button>
+        <button
+          onClick={() => navigate("/")}
+          className="hover:underline hover:cursor-pointer"
+        >
+          Sair
+        </button>
       </div>
       <div>
-        <span>Olá,</span>
-        <strong>Lucas Seidel</strong>
+        <span>Olá, </span>
+        <strong>{userName}!</strong>
       </div>
     </div>
   );
