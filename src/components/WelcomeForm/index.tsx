@@ -14,7 +14,7 @@ const WelcomeForm = () => {
 
       <Input
         placeholder="Digite seu nome:"
-        className="placeholder:text-stone-300 outline-0 focus:border-orange-color w-lg rounded-xs border"
+        className="border-input-color placeholder:text-input-color outline-0 focus:border-orange-color w-lg rounded-xs border"
         onChange={(e) => setUserName(e.target.value)}
       />
 
