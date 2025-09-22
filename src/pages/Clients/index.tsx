@@ -19,20 +19,32 @@ import PaginationComponent from "@/components/Pagination";
 const ClientsPage = () => {
   const [clients, setClients] = useState<ClientType[]>([]);
   const [dialogId, setDialogId] = useState<number>();
+  const [limit, setLimit] = useState<number>(16);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(1);
 
   const fetchClients = async () => {
-    const response = await fetch(`${apiURL}/users`);
+    try {
+      const response = await fetch(
+        `${apiURL}/users?page=${currentPage}&limit=${limit}`
+      );
 
-    const data = await response.json();
-    console.log(data);
-    const responseClients = data.clients;
-
-    setClients(responseClients);
+      const data = await response.json();
+      console.log(data);
+      const responseClients = data.clients;
+      const responseTotalPages = data.totalPages;
+      setTotalPages(responseTotalPages);
+      setClients(responseClients);
+    } catch (error: unknown) {
+      console.error(
+        `Ocorreu um eror ao tentar consultar os clientes, ERROR ${error}`
+      );
+    }
   };
 
   useEffect(() => {
     fetchClients();
-  }, []);
+  }, [limit, currentPage]);
 
   const handleCreateNewClient = async (data: ClientDataForm) => {
     try {
@@ -91,12 +103,32 @@ const ClientsPage = () => {
   };
 
   return (
-    <div className="flex flex-col w-screen h-auto justify-center items-center p-2 space-y-1.5 lg:px-20">
-      <div className="flex  w-full gap-1">
-        <strong>{clients.length}</strong>
-        <p>Clientes encontrados: </p>
+    <div className="flex flex-col w-screen h-auto justify-center items-center p-2 space-y-1.5 lg:px-10">
+      <div className="flex justify-between w-full px-20">
+        <div className="flex gap-1">
+          <p>Clientes encontrados: </p>
+          <strong>{clients.length}</strong>
+        </div>
+        <div className="flex gap-1">
+          <p>Clientes por página: </p>
+          <select
+            name="limitPage"
+            onChange={(e) => setLimit(Number(e.target.value))}
+            className="border rounded-xs"
+          >
+            <option value={16}>
+              <span>16</span>
+            </option>
+            <option value={50}>
+              <strong>50</strong>
+            </option>
+            <option value={100}>
+              <strong>100</strong>
+            </option>
+          </select>
+        </div>
       </div>
-      <main className="flex flex-col items-center  md:grid  md:grid-cols-2  lg:grid-cols-3 xl:grid-cols-4 w-full gap-y-5 bg-background">
+      <main className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 place-items-center gap-5 w-full bg-background">
         {clients.map((c) => (
           <CardClient key={c.id}>
             <CardClient.Header>{c.name}</CardClient.Header>
@@ -167,7 +199,7 @@ const ClientsPage = () => {
           </CardClient>
         ))}
       </main>
-      <footer className="flex flex-col w-full">
+      <footer className="flex flex-col w-full space-y-2.5">
         <Dialog>
           <DialogTrigger asChild>
             <Button className="border-orange-color hover:text-white border-2 bg-transparent text-orange-color">
@@ -187,7 +219,11 @@ const ClientsPage = () => {
           </DialogContent>
         </Dialog>
 
-        <PaginationComponent />
+        <PaginationComponent
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={(page) => setCurrentPage(page)}
+        />
       </footer>
     </div>
   );
