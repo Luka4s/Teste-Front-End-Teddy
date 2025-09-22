@@ -25,6 +25,7 @@ const ClientsPage = () => {
   const [limit, setLimit] = useState<number>(16);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
+  const [open, setOpen] = useState<boolean>(false);
 
   const fetchClients = useCallback(async () => {
     try {
@@ -56,10 +57,13 @@ const ClientsPage = () => {
         body: JSON.stringify(data),
       });
       toast.success("Cliente cadastrado com sucesso !");
+      setOpen(false);
     } catch (error: unknown) {
       console.error(
         `Ocorreu um erro ao tentar criar um novo cliente, ERROR ${error}`
       );
+    } finally {
+      await fetchClients();
     }
   };
 
@@ -75,8 +79,9 @@ const ClientsPage = () => {
       toast.success("Cliente atualizado com sucesso !");
     } catch (error: unknown) {
       console.error(
-        `Ocorreu um erro ao tentar ediar um cliente, ERROR ${error}`
+        `Ocorreu um erro ao tentar editar o cliente, ERROR ${error}`
       );
+      toast.error(`Ocorreu um erro ao tentar editar o cliente.`);
     } finally {
       await fetchClients();
       setClientId(undefined);
@@ -91,11 +96,12 @@ const ClientsPage = () => {
           "Content-Type": "application/json",
         },
       });
-      toast.success("Cliente atualizado com sucesso !");
+      toast.success("Cliente excluído com sucesso !");
     } catch (error: unknown) {
       console.error(
-        `Ocorreu um erro ao tentar ediar um cliente, ERROR ${error}`
+        `Ocorreu um erro ao tentar excluír o cliente , ERROR ${error}`
       );
+      toast.error(`Ocorreu um erro ao tentar excluír o cliente.`);
     } finally {
       await fetchClients();
       setClientId(undefined);
@@ -226,8 +232,8 @@ const ClientsPage = () => {
         })}
       </main>
       <footer className="flex flex-col w-full space-y-2.5">
-        <Dialog>
-          <DialogTrigger asChild>
+        <Dialog open={open} onOpenChange={(open) => setOpen(open)}>
+          <DialogTrigger asChild onClick={() => setOpen(true)}>
             <Button className="border-orange-color hover:text-white border-2 bg-transparent text-orange-color">
               Criar Cliente
             </Button>
