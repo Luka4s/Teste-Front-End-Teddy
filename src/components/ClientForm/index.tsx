@@ -67,7 +67,6 @@ const ClientForm = ({
       ),
     };
 
-    console.log("Dados enviados do formulário => ", formattedData);
     onHandleSubmitForm?.(formattedData);
     reset();
   };

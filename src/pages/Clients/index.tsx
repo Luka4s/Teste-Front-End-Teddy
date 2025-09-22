@@ -33,9 +33,10 @@ const ClientsPage = () => {
       );
 
       const data = await response.json();
-      console.log(data);
+
       const responseClients = data.clients;
       const responseTotalPages = data.totalPages;
+
       setTotalPages(responseTotalPages);
       setClients(responseClients);
     } catch (error: unknown) {
@@ -120,7 +121,7 @@ const ClientsPage = () => {
   }, [limit, currentPage, fetchClients]);
 
   return (
-    <div className="flex flex-col w-screen h-auto justify-center items-center p-2 space-y-1.5 lg:px-10">
+    <div className="flex flex-col w-full h-auto justify-center items-center p-2 space-y-1.5 lg:px-10">
       <div className="flex justify-between w-full px-20">
         <div className="flex gap-1">
           <p>Clientes encontrados: </p>
