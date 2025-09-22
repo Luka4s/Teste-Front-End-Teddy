@@ -8,7 +8,7 @@ interface LayoutProps {
 const Layout = ({ children }: LayoutProps) => {
   return (
     <>
-      <Toaster richColors />
+      <Toaster richColors closeButton />
       <Header />
       {children}
     </>

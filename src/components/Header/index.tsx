@@ -1,15 +1,16 @@
 import logo from "@/assets/Logo - Teddy.svg";
 import { Menu } from "lucide-react";
 import { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Sidebar from "../Sidebar";
+import { useClientContext } from "@/context/clientContext";
 
 const Header = () => {
   const [open, setOpen] = useState(false);
-  const location = useLocation();
+  const { userName } = useClientContext();
+
   const navigate = useNavigate();
 
-  const userName = location.state;
   const currentPath = location.pathname;
 
   return (
@@ -36,13 +37,15 @@ const Header = () => {
       </div>
       <div className="flex flex-1 items-center justify-center gap-2 md:gap-10">
         <button
+          onClick={() => navigate("/clientes")}
           className={`hover:underline hover:cursor-pointer  ${
             currentPath === "/clientes" && "text-orange-color underline"
           }`}
         >
-          Cliente
+          Clientes
         </button>
         <button
+          onClick={() => navigate("/clientes-selecionados")}
           className={`hover:underline hover:cursor-pointer ${
             currentPath === "/clientes-selecionados" &&
             "text-orange-color underline"

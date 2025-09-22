@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { apiURL } from "@/utils/apiConfig";
 import CardClient from "@/components/CardClient";
 import type { ClientType, ClientDataForm } from "@/types/Client";
-import { Pencil, Plus, Trash2 } from "lucide-react";
+import { Check, Pencil, Plus, Trash2 } from "lucide-react";
 import {
   Dialog,
   DialogClose,
@@ -15,15 +15,18 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import ClientForm from "@/components/ClientForm";
 import PaginationComponent from "@/components/Pagination";
+import { useCallback } from "react";
+import { useClientContext } from "@/context/clientContext";
 
 const ClientsPage = () => {
+  const { selectedClients, setSelectedClients } = useClientContext();
   const [clients, setClients] = useState<ClientType[]>([]);
-  const [dialogId, setDialogId] = useState<number>();
+  const [clientId, setClientId] = useState<number>();
   const [limit, setLimit] = useState<number>(16);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
 
-  const fetchClients = async () => {
+  const fetchClients = useCallback(async () => {
     try {
       const response = await fetch(
         `${apiURL}/users?page=${currentPage}&limit=${limit}`
@@ -40,11 +43,7 @@ const ClientsPage = () => {
         `Ocorreu um eror ao tentar consultar os clientes, ERROR ${error}`
       );
     }
-  };
-
-  useEffect(() => {
-    fetchClients();
-  }, [limit, currentPage]);
+  }, [currentPage, limit]);
 
   const handleCreateNewClient = async (data: ClientDataForm) => {
     try {
@@ -65,7 +64,7 @@ const ClientsPage = () => {
 
   const handleEditClient = async (data: ClientDataForm) => {
     try {
-      await fetch(`${apiURL}/users/${dialogId}`, {
+      await fetch(`${apiURL}/users/${clientId}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -79,13 +78,13 @@ const ClientsPage = () => {
       );
     } finally {
       await fetchClients();
-      setDialogId(undefined);
+      setClientId(undefined);
     }
   };
 
   const handleDeleteClient = async () => {
     try {
-      await fetch(`${apiURL}/users/${dialogId}`, {
+      await fetch(`${apiURL}/users/${clientId}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -98,9 +97,27 @@ const ClientsPage = () => {
       );
     } finally {
       await fetchClients();
-      setDialogId(undefined);
+      setClientId(undefined);
     }
   };
+
+  const handleAddClientInSelectedClientList = (client: ClientType) => {
+    setSelectedClients((prev) => {
+      const clienteInList = prev.some((c) => c.id === client.id);
+
+      if (clienteInList) {
+        toast.warning(`O cliente ${client.name} já está inlcuso na lista.`);
+        return prev;
+      }
+
+      toast.success(`Cliente ${client.name} adicionado com sucesso !`);
+      return [...prev, client];
+    });
+  };
+
+  useEffect(() => {
+    fetchClients();
+  }, [limit, currentPage, fetchClients]);
 
   return (
     <div className="flex flex-col w-screen h-auto justify-center items-center p-2 space-y-1.5 lg:px-10">
@@ -129,75 +146,83 @@ const ClientsPage = () => {
         </div>
       </div>
       <main className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 place-items-center gap-5 w-full bg-background">
-        {clients.map((c) => (
-          <CardClient key={c.id}>
-            <CardClient.Header>{c.name}</CardClient.Header>
-            <CardClient.Content>
-              <div className="flex gap-1">
-                <span>Salário: </span>
-                <span>
-                  {c.salary.toLocaleString("pt-BR", {
-                    style: "currency",
-                    currency: "BRL",
-                  })}
-                </span>
-              </div>
-              <div className="flex gap-1">
-                <span>Empresa: </span>
-                <span>
-                  {c.companyValuation.toLocaleString("pt-BR", {
-                    style: "currency",
-                    currency: "BRL",
-                  })}
-                </span>
-              </div>
-            </CardClient.Content>
-            <CardClient.Footer>
-              <CardClient.Icon icon={<Plus size={20} />} />
+        {clients.map((c) => {
+          const isSelected = selectedClients.some(
+            (client) => client.id === c.id
+          );
+          return (
+            <CardClient key={c.id}>
+              <CardClient.Header>{c.name}</CardClient.Header>
+              <CardClient.Content>
+                <div className="flex gap-1">
+                  <span>Salário: </span>
+                  <span>
+                    {c.salary.toLocaleString("pt-BR", {
+                      style: "currency",
+                      currency: "BRL",
+                    })}
+                  </span>
+                </div>
+                <div className="flex gap-1">
+                  <span>Empresa: </span>
+                  <span>
+                    {c.companyValuation.toLocaleString("pt-BR", {
+                      style: "currency",
+                      currency: "BRL",
+                    })}
+                  </span>
+                </div>
+              </CardClient.Content>
+              <CardClient.Footer>
+                <CardClient.Icon
+                  icon={isSelected ? <Check size={20} /> : <Plus size={20} />}
+                  onClick={() => handleAddClientInSelectedClientList(c)}
+                />
 
-              <Dialog
-                open={dialogId === c.id}
-                onOpenChange={(open) => setDialogId(open ? c.id : undefined)}
-              >
-                <DialogTrigger onClick={() => setDialogId(c.id)}>
-                  <CardClient.Icon icon={<Pencil size={17} />} />
-                </DialogTrigger>
-                <DialogContent aria-describedby={undefined}>
-                  <DialogHeader>
-                    <DialogTitle>Editar cliente:</DialogTitle>
-                    <DialogClose onClick={() => setDialogId(undefined)} />
-                  </DialogHeader>
-                  <ClientForm
-                    label="Editar cliente"
-                    client={c}
-                    onHandleSubmitForm={handleEditClient}
-                    isDeleteForm
-                  />
-                </DialogContent>
-              </Dialog>
-              <Dialog
-                open={dialogId === c.id}
-                onOpenChange={(open) => setDialogId(open ? c.id : undefined)}
-              >
-                <DialogTrigger onClick={() => setDialogId(c.id)}>
-                  <CardClient.Icon icon={<Trash2 size={17} color="red" />} />
-                </DialogTrigger>
-                <DialogContent aria-describedby={undefined}>
-                  <DialogHeader>
-                    <DialogTitle>Excluir cliente:</DialogTitle>
-                    <DialogClose onClick={() => setDialogId(undefined)} />
-                  </DialogHeader>
-                  <ClientForm
-                    label="Excluir cliente"
-                    client={c}
-                    isDeleteForm
-                    onHandleDeleteClient={handleDeleteClient}
-                  />
-                </DialogContent>
-              </Dialog>
-            </CardClient.Footer>
-          </CardClient>
-        ))}
+                <Dialog
+                  open={clientId === c.id}
+                  onOpenChange={(open) => setClientId(open ? c.id : undefined)}
+                >
+                  <DialogTrigger onClick={() => setClientId(c.id)}>
+                    <CardClient.Icon icon={<Pencil size={17} />} />
+                  </DialogTrigger>
+                  <DialogContent aria-describedby={undefined}>
+                    <DialogHeader>
+                      <DialogTitle>Editar cliente:</DialogTitle>
+                      <DialogClose onClick={() => setClientId(undefined)} />
+                    </DialogHeader>
+                    <ClientForm
+                      label="Editar cliente"
+                      client={c}
+                      onHandleSubmitForm={handleEditClient}
+                      isDeleteForm
+                    />
+                  </DialogContent>
+                </Dialog>
+                <Dialog
+                  open={clientId === c.id}
+                  onOpenChange={(open) => setClientId(open ? c.id : undefined)}
+                >
+                  <DialogTrigger onClick={() => setClientId(c.id)}>
+                    <CardClient.Icon icon={<Trash2 size={17} color="red" />} />
+                  </DialogTrigger>
+                  <DialogContent aria-describedby={undefined}>
+                    <DialogHeader>
+                      <DialogTitle>Excluir cliente:</DialogTitle>
+                      <DialogClose onClick={() => setClientId(undefined)} />
+                    </DialogHeader>
+                    <ClientForm
+                      label="Excluir cliente"
+                      client={c}
+                      isDeleteForm
+                      onHandleDeleteClient={handleDeleteClient}
+                    />
+                  </DialogContent>
+                </Dialog>
+              </CardClient.Footer>
+            </CardClient>
+          );
+        })}
       </main>
       <footer className="flex flex-col w-full space-y-2.5">
         <Dialog>

@@ -1,9 +1,15 @@
-interface CardIconProps {
+import type { HTMLAttributes } from "react";
+
+interface CardIconProps extends HTMLAttributes<HTMLDivElement> {
   icon: React.ReactNode;
 }
 
-const CardIcon = ({ icon }: CardIconProps) => {
-  return <div className="hover:cursor-pointer active:scale-90">{icon}</div>;
+const CardIcon = ({ icon, ...props }: CardIconProps) => {
+  return (
+    <div {...props} className="hover:cursor-pointer active:scale-90">
+      {icon}
+    </div>
+  );
 };
 
 export default CardIcon;

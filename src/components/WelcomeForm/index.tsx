@@ -4,6 +4,7 @@ import { Button } from "../ui/button";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useClientContext } from "@/context/clientContext";
 
 const FormSchema = z.object({
   name: z.string().min(1, { message: "Por favor informe um nome valido." }),
@@ -22,11 +23,13 @@ const WelcomeForm = () => {
     mode: "onChange",
     resolver: zodResolver(FormSchema),
   });
+  const { setUserName } = useClientContext();
 
   const handleSubmitForm = (data: FormType) => {
     const userName = data.name;
 
-    navigate("/clientes", { state: userName });
+    setUserName(userName);
+    navigate("/clientes");
   };
 
   return (

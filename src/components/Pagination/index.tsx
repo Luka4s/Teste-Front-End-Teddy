@@ -22,7 +22,7 @@ const PaginationComponent = ({
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   return (
-    <Pagination>
+    <Pagination className="w-fit">
       <PaginationContent>
         {pages.map((page) => (
           <PaginationItem key={page}>
