@@ -10,6 +10,7 @@
     "paths": {
       "@/*": ["src/*"]
     },
+    "composite": true,
 
     /* Bundler mode */
     "moduleResolution": "bundler",

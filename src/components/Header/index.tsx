@@ -1,4 +1,4 @@
-import logo from "@/assets/Logo - Teddy.svg";
+import logo from "@/assets/LogoTeddy.svg";
 import { Menu } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -18,10 +18,14 @@ const Header = () => {
       <div className="flex gap-10 items-center">
         <div className="min-w-14 flex justify-center">
           {!open && (
-            <Menu
-              onClick={() => setOpen(true)}
-              className="hover:cursor-pointer"
-            />
+            <button>
+              {" "}
+              <Menu
+                aria-label="Menu"
+                onClick={() => setOpen(true)}
+                className="hover:cursor-pointer"
+              />
+            </button>
           )}
           <Sidebar
             isOpen={open}

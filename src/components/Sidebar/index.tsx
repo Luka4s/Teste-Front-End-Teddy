@@ -1,5 +1,5 @@
 import type { Dispatch, SetStateAction } from "react";
-import logo from "@/assets/Logo - Teddy.svg";
+import logo from "@/assets/LogoTeddy.svg";
 import { ArrowLeft, Home, UserRound, UserRoundCheck } from "lucide-react";
 
 import { motion, AnimatePresence } from "framer-motion";
@@ -18,6 +18,7 @@ const Sidebar = ({ isOpen, currentPath, onSetIsOpen }: SidebarProps) => {
     <>
       {/* Dark Overlay for when sidebar is open */}
       <div
+        data-testid="sidebar-overlay"
         className={`fixed inset-0 bg-black/40 z-40 transition-opacity duration-500 ease-in-out
         ${isOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}
         onClick={() => onSetIsOpen(false)}
@@ -57,6 +58,7 @@ const Sidebar = ({ isOpen, currentPath, onSetIsOpen }: SidebarProps) => {
                   <span>Home</span>
                 </button>
                 <button
+                  onClick={() => navigate("/clientes")}
                   className={`flex gap-2.5 pl-8 items-start hover:cursor-pointer ${
                     currentPath === "/clientes" &&
                     "text-orange-color border-r-2 border-orange-color"
