@@ -1,1 +1,1 @@
-export const apiURL = "https://boasorte.teddybackoffice.com.br";
+export const apiURL = import.meta.env.VITE_API_URL;

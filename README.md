@@ -122,8 +122,7 @@ pnpm test
 │   │   ├── Sidebar
 │   │   ├── ClienteCard
 │   │   └── ...
-│   ├── context / store (para gerenciar estado global)
-│   ├── services (requisições à API)
+│   ├── context (para gerenciar estado global)
 │   └── App.tsx
 ├── public
 ├── package.json
@@ -135,7 +134,7 @@ pnpm test
 ## 🔧 Tecnologias utilizadas
 
 - **React + Vite**
-- **TypeScript** (se aplicável)
+- **TypeScript**
 - **TailwindCSS** para estilização
 - **Context API** para gerenciamento de estado
 - **API REST** para obter dados dos clientes
