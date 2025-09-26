@@ -1,4 +1,4 @@
-# 📌 Projeto de Gerenciamento de Clientes
+# 📌 Teste técnico Front End
 
 Este projeto é uma aplicação **React** que permite gerenciar clientes, selecioná-los e navegar entre telas de forma simples e intuitiva.
 
