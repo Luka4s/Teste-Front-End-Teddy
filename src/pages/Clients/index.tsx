@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { apiURL } from "@/utils/apiConfig";
 import CardClient from "@/components/CardClient";
-import type { ClientType, ClientDataForm } from "@/types/Client";
+import type { ClientType, ClientDataForm } from "@/types/client";
 import { Check, Pencil, Plus, Trash2 } from "lucide-react";
 import {
   Dialog,
@@ -140,15 +140,9 @@ const ClientsPage = () => {
             onChange={(e) => setLimit(Number(e.target.value))}
             className="border rounded-xs"
           >
-            <option value={16}>
-              <span>16</span>
-            </option>
-            <option value={50}>
-              <strong>50</strong>
-            </option>
-            <option value={100}>
-              <strong>100</strong>
-            </option>
+            <option value={16}>16</option>
+            <option value={50}>50</option>
+            <option value={100}>100</option>
           </select>
         </div>
       </div>

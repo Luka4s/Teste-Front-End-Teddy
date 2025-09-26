@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-import type { ClientType } from "@/types/Client";
+import type { ClientType } from "@/types/client";
 import {
   createContext,
   useContext,
