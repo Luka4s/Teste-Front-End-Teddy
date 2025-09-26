@@ -2,7 +2,7 @@ import { Minus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import CardClient from "@/components/CardClient";
 import { useClientContext } from "@/context/clientContext";
-import type { ClientType } from "@/types/client";
+import type { ClientType } from "@/types/clients";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 

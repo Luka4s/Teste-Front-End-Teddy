@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { apiURL } from "@/utils/apiConfig";
 import CardClient from "@/components/CardClient";
-import type { ClientType, ClientDataForm } from "@/types/client";
+import type { ClientType, ClientDataForm } from "@/types/clients";
 import { Check, Pencil, Plus, Trash2 } from "lucide-react";
 import {
   Dialog,

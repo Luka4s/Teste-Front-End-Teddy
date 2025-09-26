@@ -2,7 +2,7 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import userEvent from "@testing-library/user-event";
 import ClientForm from "@/components/ClientForm";
-import type { ClientType } from "@/types/client";
+import type { ClientType } from "@/types/clients";
 
 describe("ClientForm Component", () => {
   const mockSubmit = jest.fn();

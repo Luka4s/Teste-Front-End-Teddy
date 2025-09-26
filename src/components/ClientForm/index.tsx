@@ -1,4 +1,4 @@
-import type { ClientType, ClientDataForm } from "@/types/client";
+import type { ClientType, ClientDataForm } from "@/types/clients";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Controller, useForm } from "react-hook-form";
