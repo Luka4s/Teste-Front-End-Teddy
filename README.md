@@ -4,6 +4,10 @@ Este projeto é uma aplicação **React** que permite gerenciar clientes, seleci
 
 ---
 
+## Link do vídeo do Youtube
+
+`https://youtu.be/oVqkAoCLd24`
+
 ## 🚀 Como iniciar o projeto
 
 1. **Clone este repositório**
