@@ -14,7 +14,11 @@ describe("ClientForm Component", () => {
 
   it("renderiza o formulário normalmente", () => {
     render(
-      <ClientForm label="Criar cliente" onHandleSubmitForm={mockSubmit} />
+      <ClientForm
+        isDeleteForm={false}
+        label="Criar cliente"
+        onHandleSubmitForm={mockSubmit}
+      />
     );
 
     expect(screen.getByPlaceholderText("Digite o nome:")).toBeInTheDocument();
@@ -31,7 +35,11 @@ describe("ClientForm Component", () => {
 
   it("valida campos obrigatórios", async () => {
     render(
-      <ClientForm label="Criar cliente" onHandleSubmitForm={mockSubmit} />
+      <ClientForm
+        isDeleteForm={false}
+        label="Criar cliente"
+        onHandleSubmitForm={mockSubmit}
+      />
     );
 
     const form = screen
@@ -54,7 +62,11 @@ describe("ClientForm Component", () => {
 
   it("submete o formulário corretamente", async () => {
     render(
-      <ClientForm label="Criar cliente" onHandleSubmitForm={mockSubmit} />
+      <ClientForm
+        isDeleteForm={false}
+        label="Criar cliente"
+        onHandleSubmitForm={mockSubmit}
+      />
     );
 
     fireEvent.change(screen.getByPlaceholderText("Digite o nome:"), {
