@@ -8,6 +8,10 @@ Este projeto é uma aplicação **React** que permite gerenciar clientes, seleci
 
 `https://youtu.be/oVqkAoCLd24`
 
+## Link para a aplicação na vercel
+
+`teste-front-end-teddy-snowy.vercel.app`
+
 ## 🚀 Como iniciar o projeto
 
 1. **Clone este repositório**
