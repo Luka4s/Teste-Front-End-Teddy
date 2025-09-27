@@ -33,7 +33,6 @@ const ClientForm = ({
   onHandleDeleteClient,
   onHandleSubmitForm,
 }: ClientFormProps) => {
-  console.log(isDeleteForm);
   const {
     reset,
     control,
@@ -74,7 +73,7 @@ const ClientForm = ({
 
   return (
     <div className="flex flex-col">
-      {isDeleteForm !== undefined ? (
+      {isDeleteForm ? (
         <div className="flex flex-col space-y-2.5">
           <p>
             {" "}

@@ -184,7 +184,7 @@ const ClientsPage = () => {
                 />
 
                 <Dialog
-                  open={clientId === c.id}
+                  open={clientId === c.id && isDeleteForm === false}
                   onOpenChange={(open) => setClientId(open ? c.id : undefined)}
                 >
                   <DialogTrigger
@@ -203,7 +203,7 @@ const ClientsPage = () => {
                     <ClientForm
                       label="Editar cliente"
                       client={c}
-                      isDeleteForm={false}
+                      isDeleteForm={isDeleteForm}
                       onHandleSubmitForm={handleEditClient}
                     />
                   </DialogContent>
@@ -228,7 +228,7 @@ const ClientsPage = () => {
                     <ClientForm
                       label="Excluir cliente"
                       client={c}
-                      isDeleteForm={true}
+                      isDeleteForm={isDeleteForm}
                       onHandleDeleteClient={handleDeleteClient}
                     />
                   </DialogContent>
