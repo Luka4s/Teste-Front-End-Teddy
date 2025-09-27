@@ -203,7 +203,6 @@ const ClientsPage = () => {
                     <ClientForm
                       label="Editar cliente"
                       client={c}
-                      isDeleteForm={false}
                       onHandleSubmitForm={handleEditClient}
                     />
                   </DialogContent>
