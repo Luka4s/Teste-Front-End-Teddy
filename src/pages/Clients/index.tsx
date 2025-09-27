@@ -26,6 +26,9 @@ const ClientsPage = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [open, setOpen] = useState<boolean>(false);
+  const [isDeleteForm, setIsDeleteForm] = useState<boolean | undefined>(
+    undefined
+  );
 
   const fetchClients = useCallback(async () => {
     try {
@@ -184,7 +187,12 @@ const ClientsPage = () => {
                   open={clientId === c.id}
                   onOpenChange={(open) => setClientId(open ? c.id : undefined)}
                 >
-                  <DialogTrigger onClick={() => setClientId(c.id)}>
+                  <DialogTrigger
+                    onClick={() => {
+                      setClientId(c.id);
+                      setIsDeleteForm(false);
+                    }}
+                  >
                     <CardClient.Icon icon={<Pencil size={17} />} />
                   </DialogTrigger>
                   <DialogContent aria-describedby={undefined}>
@@ -195,16 +203,21 @@ const ClientsPage = () => {
                     <ClientForm
                       label="Editar cliente"
                       client={c}
+                      isDeleteForm={false}
                       onHandleSubmitForm={handleEditClient}
-                      isDeleteForm
                     />
                   </DialogContent>
                 </Dialog>
                 <Dialog
-                  open={clientId === c.id}
+                  open={clientId === c.id && isDeleteForm === true}
                   onOpenChange={(open) => setClientId(open ? c.id : undefined)}
                 >
-                  <DialogTrigger onClick={() => setClientId(c.id)}>
+                  <DialogTrigger
+                    onClick={() => {
+                      setClientId(c.id);
+                      setIsDeleteForm(true);
+                    }}
+                  >
                     <CardClient.Icon icon={<Trash2 size={17} color="red" />} />
                   </DialogTrigger>
                   <DialogContent aria-describedby={undefined}>
@@ -215,7 +228,7 @@ const ClientsPage = () => {
                     <ClientForm
                       label="Excluir cliente"
                       client={c}
-                      isDeleteForm
+                      isDeleteForm={true}
                       onHandleDeleteClient={handleDeleteClient}
                     />
                   </DialogContent>
@@ -240,6 +253,7 @@ const ClientsPage = () => {
             <ClientForm
               label="Criar cliente"
               client={undefined}
+              isDeleteForm={undefined}
               onHandleSubmitForm={handleCreateNewClient}
             />
           </DialogContent>

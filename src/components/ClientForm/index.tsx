@@ -9,7 +9,7 @@ import { IMaskInput } from "react-imask";
 interface ClientFormProps {
   label: string;
   client?: ClientType;
-  isDeleteForm?: boolean;
+  isDeleteForm: boolean | undefined;
   onHandleDeleteClient?: () => void;
   onHandleSubmitForm?: (data: ClientDataForm) => void;
 }
@@ -33,6 +33,7 @@ const ClientForm = ({
   onHandleDeleteClient,
   onHandleSubmitForm,
 }: ClientFormProps) => {
+  console.log(isDeleteForm);
   const {
     reset,
     control,
@@ -73,7 +74,7 @@ const ClientForm = ({
 
   return (
     <div className="flex flex-col">
-      {isDeleteForm ? (
+      {isDeleteForm !== undefined ? (
         <div className="flex flex-col space-y-2.5">
           <p>
             {" "}
