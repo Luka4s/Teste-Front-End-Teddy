@@ -9,7 +9,7 @@ import { IMaskInput } from "react-imask";
 interface ClientFormProps {
   label: string;
   client?: ClientType;
-  isDeleteForm: boolean | undefined;
+  isDeleteForm: boolean;
   onHandleDeleteClient?: () => void;
   onHandleSubmitForm?: (data: ClientDataForm) => void;
 }
